@@ -1,0 +1,66 @@
+services:
+  mariadb:
+    container_name: mariadb
+    build:
+      context: ./requirements/mariadb
+      args:
+        - ALPINE_VERSION=${ALPINE_VERSION}
+    env_file: .env
+    networks:
+      - inception
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: on-failure
+
+  wordpress:
+    container_name: wordpress
+    build:
+      context: ./requirements/wordpress
+      args:
+        - ALPINE_VERSION=${ALPINE_VERSION}
+        - PHP_VERSION=${PHP_VERSION}
+        - WORDPRESS_VERSION=${WORDPRESS_VERSION}
+    env_file: .env
+    depends_on:
+      - mariadb
+    networks:
+      - inception
+    volumes:
+      - wp_files:/var/www/html
+    restart: on-failure
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./requirements/nginx
+      args:
+        - ALPINE_VERSION=${ALPINE_VERSION}
+        - DOMAIN_NAME=${DOMAIN_NAME}
+    env_file: .env
+    depends_on:
+      - wordpress
+    ports:
+      - "443:443"
+    networks:
+      - inception
+    volumes:
+      - wp_files:/var/www/html
+    restart: on-failure
+
+networks:
+  inception:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/kort/data/mariadb
+  wp_files:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/kort/data/wordpress
