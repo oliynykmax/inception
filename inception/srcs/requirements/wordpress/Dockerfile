@@ -1,15 +1,36 @@
 FROM alpine:3.22
 
-RUN apk update && apk upgrade &&     apk add --no-cache     php82     php82-fpm     php82-mysqli     php82-json     php82-curl     php82-dom     php82-exif     php82-fileinfo     php82-imagick     php82-mbstring     php82-openssl     php82-xml     php82-zip     curl
+RUN apk update && apk add --no-cache \
+    curl \
+    mariadb-client \
+    php84 \
+    php84-curl \
+    php84-fpm \
+    php84-gd \
+    php84-iconv \
+    php84-json \
+    php84-mbstring \
+    php84-mysqli \
+    php84-openssl \
+    php84-phar \
+    php84-session \
+    php84-tokenizer \
+    php84-xml \
+    php84-zip \
+    php84-ctype
 
+RUN ln -s /usr/bin/php84 /usr/bin/php
+RUN addgroup -S www-data || true
+RUN adduser -S www-data -G www-data || true
 
-COPY ./conf/www.conf /etc/php82/php-fpm.d/www.conf
-COPY ./tools/setup_wp.sh /usr/local/bin/setup_wp.sh
-RUN chmod +x /usr/local/bin/setup_wp.sh
+COPY ./conf/www.conf /etc/php84/php-fpm.d/www.conf
 
-WORKDIR /var/www/html
+RUN mkdir -p /var/www/html
+RUN chown -R www-data:www-data /var/www/html
+
+COPY ./tools/wp.sh /usr/local/bin/wp.sh
+RUN chmod +x /usr/local/bin/wp.sh
 
 EXPOSE 9000
 
-ENTRYPOINT ["/usr/local/bin/setup_wp.sh"]
-CMD ["php-fpm82", "-F"]
+ENTRYPOINT ["wp.sh"]
