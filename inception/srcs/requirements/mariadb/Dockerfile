@@ -10,4 +10,7 @@ RUN chmod +x /usr/local/bin/init_db.sh
 
 EXPOSE 3306
 
+HEALTHCHECK --interval=5s --timeout=3s --retries=5 \
+    CMD mariadb-admin ping --protocol=tcp --host=localhost --user=root --password=$MYSQL_ROOT_PASSWORD --silent || exit 1
+
 ENTRYPOINT ["init_db.sh"]

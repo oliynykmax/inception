@@ -32,4 +32,4 @@ else
 fi
 
 echo "Starting MariaDB server..."
-exec /usr/bin/mysqld --user=mysql --console
+exec /usr/bin/mariadbd --user=mysql --console
