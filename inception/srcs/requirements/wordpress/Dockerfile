@@ -20,8 +20,7 @@ RUN apk update && apk add --no-cache \
     php84-ctype
 
 RUN ln -s /usr/bin/php84 /usr/bin/php
-RUN addgroup -S www-data || true
-RUN adduser -S www-data -G www-data || true
+RUN adduser -S www-data -G www-data
 
 COPY ./conf/www.conf /etc/php84/php-fpm.d/www.conf
 

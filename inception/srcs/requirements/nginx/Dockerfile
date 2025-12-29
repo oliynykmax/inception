@@ -8,8 +8,7 @@ RUN openssl req -x509 -nodes \
     -keyout /etc/nginx/ssl/private.key \
     -subj "/C=FI/ST=Uusimaa/L=Helsinki/O=42/OU=Hive/CN=maoliiny.42.fr"
 
-RUN addgroup -S www-data || true
-RUN adduser -S www-data -G www-data || true
+RUN adduser -S www-data -G www-data
 
 COPY ./conf/nginx.conf /etc/nginx/nginx.conf
 
