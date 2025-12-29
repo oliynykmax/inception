@@ -19,7 +19,7 @@ clean: down
 
 fclean: clean
 	@docker compose -f $(COMPOSE_FILE) down --rmi all --volumes
-	sudo rm -rf $(DATA_PATH)/*
+	doas rm -rf $(DATA_PATH)/*
 
 re: fclean all
 
