@@ -4,6 +4,13 @@ echo "memory_limit = 512M" >> /etc/php84/php.ini
 
 cd /var/www/html
 
+echo "Waiting for MariaDB to be ready..."
+until mariadb-admin ping -h mariadb -u root -p"$MYSQL_ROOT_PASSWORD" --silent; do
+    echo "MariaDB is not ready yet, waiting..."
+    sleep 2
+done
+echo "MariaDB is ready!"
+
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x wp-cli.phar
 mv wp-cli.phar /usr/local/bin/wp

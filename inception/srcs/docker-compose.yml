@@ -23,8 +23,7 @@ services:
     volumes:
       - wordpress_data:/var/www/html
     depends_on:
-      mariadb:
-        condition: service_healthy
+      - mariadb
     expose:
       - "9000"
 
